@@ -23,60 +23,88 @@ spawn(?MODULE,multiplier,[]).%this is a very effective way of not having to type
 start_divider() ->%specialize this to the function being spawned
 spawn(?MODULE,divider,[]).%this is a very effective way of not having to type this over and over in your code.
 	
-%% These are the stubbed functions
-factorial_of(Pid,Request)->
-	Pid ! {self(),Request},
+%% These are the clients, or stubbed functions
+factorial_of(Factorialized_pid,Number)->
+	Factorialized_pid ! {self(),Number},
 	receive
-	{Pid, Response} ->
 		Response -> Response
 	end.
-add(a,b)->
-	return.
-subtract(a,b,c)->
-	return.
-multiply(a,b,c)->
-	return.
-divide(a,b,c)->
-	return.
+add(Add_pid, Firstnum, Addsecond)->
+	Add_pid ! {self(), Firstnum, Addsecond},
+	receive
+		Num -> Num
+end.
+subtract(Subtract_pid, a, b)->
+	Subtract_pid ! {self(), a, b},
+	receive
+		Answer -> 
+			Answer 
+end.
+multiplier(Multiply_pid, b, c)->
+	Multiply_pid ! {self(), b, c},
+	receive 
+		Answer -> 
+			Answer
+		end.
+divide(DividePID,b,c)->
+	DividePID ! {self(), b, c},
+	receive
+		Answer ->
+		end.
 
-%% recurrent loops(call themselves) 
+%% Process Functions or Recurrent loops(call themselves) 
 factorializer()->
 	receive
-		Any ->
-			io:format("Received:~p~n",[Any]),%change this to do pattern matching, calculations, and to send a response.
-			
-	end,
+		{Requesting_pid, Data} when is_integer(Data) == false ->
+			Requesting_pid ! {fail, Data, is_not_integer};
+		{Requesting_pid, Integer} when Integer < 0 -> 
+			Requesting_pid ! {fail, Integer, is_negative};
+		{Requesting_pid, Number} ->
+			Requesting_pid ! lists:foldl(fun(X,Accum) -> X*Accum end,1,lists:seq(1,Number))
+		end,
 	factorializer().
 
 adder()->
 	receive
-		Any ->
-			io:format("Received:~p~n",[Any]),%change this to do pattern matching, calculations, and to send a response.
-			
+	{Requesting_pid,Firstnum, Addsecond_placeholder} when is_integer(Firstnum) == false ->
+		Requesting_pid ! {fail, Firstnum, isnt_integer};
+	{Requesting_pid,Firstnum_placeholder, Addsecond} when is_integer(Addsecond) == false ->
+		Requesting_pid ! {fail, Addsecond, isnt_integer};
+	{Requesting_pid, Firstnum, Addsecond} ->
+		Requesting_pid ! Firstnum + Addsecond
 	end,
 	adder().
 
 subtracter()->
 	receive
-		Any ->
-			io:format("Received:~p~n",[Any]),%change this to do pattern matching, calculations, and to send a response.
-			
+	{Requesting_pid,Minuend,_Subtrahend} when (is_number(Minuend) == false)  ->
+		Requesting_pid ! {fail,Minuend,is_not_number};
+	{Requesting_pid,_Minuend,Subtrahend} when (is_number(Subtrahend) == false)  ->
+		Requesting_pid ! {fail,Subtrahend,is_not_number};
+	{Requesting_pid,Minuend,Subtrahend} ->
+		Requesting_pid ! Minuend-Subtrahend			
 	end,
 	subtracter().
 
 multiplier()->
 	receive
-		Any ->
-			io:format("Received:~p~n",[Any]),%change this to do pattern matching, calculations, and to send a response.
-			
+	{Requesting_pid,Multiplicand,_Multiplier} when (is_number(Multiplicand) == false)  ->
+		Requesting_pid ! {fail,Multiplicand,is_not_number};
+	{Requesting_pid,_Multiplicand,Multiplier} when (is_number(Multiplier) == false)  ->
+		Requesting_pid ! {fail,Multiplier,is_not_number};
+	{Requesting_pid,Multiplicand,Multiplier} ->
+		Requesting_pid ! Multiplicand*Multiplier		
 	end,
 	multiplier().
 
 divider()->
 	receive
-		Any ->
-			io:format("Received:~p~n",[Any]),%change this to do pattern matching, calculations, and to send a response.
-			
+		{Requesting_pid, Dividend, x} when {is_number(Dividend) == false} ->
+			Requesting_pid ! {fail, Dividend, isnt_a_number};
+		{Requesting_pid, x, Divider} when {is_number(Divider) == false} ->
+			Requesting_pid ! {fail, Divider, is_not_a_num};
+		{Requesting_pid, Dividend, Divider} ->
+			Requesting_pid ! Dividend/Divider
 	end,
 	divider().
 
