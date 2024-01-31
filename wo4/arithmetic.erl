@@ -6,7 +6,7 @@
 
 %% Spawning functions
 start_factorializer() ->
-	io:format("Made factorializer function start gettin going"),
+	io:format("in factorializer"),
 	spawn(?MODULE,factorializer,[]).
 start_adder() ->
 	spawn(?MODULE,adder,[]).

@@ -6,6 +6,23 @@
 %%
 %% Put your functions, described in the task HTML file here.
 %%
+
+%Spawning functions
+start_factorializer() -> %specialize this to the function being spawned
+spawn(?MODULE,factorializer,[]). %this is a very effective way of not having to type this over and over in your code.
+
+start_adder() ->%specialize this to the function being spawned
+spawn(?MODULE,adder,[]).%this is a very effective way of not having to type this over and over in your code.
+
+start_subtracter() ->%specialize this to the function being spawned
+spawn(?MODULE,subtracter,[]).%this is a very effective way of not having to type this over and over in your code.
+
+start_multiplier() ->%specialize this to the function being spawned
+spawn(?MODULE,multiplier,[]).%this is a very effective way of not having to type this over and over in your code.
+
+start_divider() ->%specialize this to the function being spawned
+spawn(?MODULE,divider,[]).%this is a very effective way of not having to type this over and over in your code.
+	
 %% These are the stubbed functions
 factorial_of(Pid,Request)->
 	Pid ! {self(),Request},
@@ -63,22 +80,6 @@ divider()->
 	end,
 	divider().
 
-
-	%Spawning functions
-start_factorializer() -> %specialize this to the function being spawned
-spawn(?MODULE,factorializer,[]). %this is a very effective way of not having to type this over and over in your code.
-
-start_adder() ->%specialize this to the function being spawned
-spawn(?MODULE,adder,[]).%this is a very effective way of not having to type this over and over in your code.
-
-start_subtracter() ->%specialize this to the function being spawned
-spawn(?MODULE,subtracter,[]).%this is a very effective way of not having to type this over and over in your code.
-
-start_multiplier() ->%specialize this to the function being spawned
-spawn(?MODULE,multiplier,[]).%this is a very effective way of not having to type this over and over in your code.
-
-start_divider() ->%specialize this to the function being spawned
-spawn(?MODULE,divider,[]).%this is a very effective way of not having to type this over and over in your code.
 
 
 -ifdef(EUNIT).
